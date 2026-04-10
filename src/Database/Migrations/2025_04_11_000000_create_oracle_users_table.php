@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('AppAudience', 100)->nullable();
             $table->string('UserID', 100)->nullable()->index();
             $table->string('ClientID', 100)->nullable()->index();
-            $table->string('NPClientID', 100)->nullable();
+            $table->string('ApplicationID', 100)->nullable();
 
             $table->text('Token')->nullable();
 
