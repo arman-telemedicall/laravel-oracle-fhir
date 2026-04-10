@@ -3,7 +3,7 @@
 return [
     'token_url'      => env('ORACLE_TOKEN_URL', 'https://fhir.ORACLE.com/interconnect-fhir-oauth/oauth2/token'),
     'auth_url'       => env('ORACLE_AUTH_URL', 'https://fhir.ORACLE.com/interconnect-fhir-oauth/oauth2/authorize'),
-    'fhir_base'      => env('ORACLE_FHIR_BASE', 'https://fhir-open.cerner.com/r4/'),
+    'fhir_base'      => env('ORACLE_FHIR_BASE', 'https://fhir-open.cerner.com/r4/e573b5d9-449b-411c-b6af-73f7fedafc83'),
 
     'jwt_alg'                 => 'RS256',
     'jwt_kid'                 => 'ORACLE-key',
