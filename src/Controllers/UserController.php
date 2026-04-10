@@ -139,7 +139,7 @@ class UserController extends BaseController
             }
         }
 
-        $url = $this->OracleConfig('fhir_base') . "/Patient/{$patientId}/\$summary";
+        $url = $this->OracleConfig('fhir_base') . "/Patient/{$patientId}";
 
         $response = Http::withHeaders([
             'Authorization' => "Bearer {$token}",
