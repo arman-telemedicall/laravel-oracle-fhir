@@ -47,7 +47,7 @@ Set .env parameters
 ```bash
 ORACLE_TOKEN_URL=https://fhir.Oracle.com/interconnect-fhir-oauth/oauth2/token
 ORACLE_AUTH_URL=https://fhir.Oracle.com/interconnect-fhir-oauth/oauth2/authorize
-ORACLE_FHIR_BASE=https://fhir-open.cerner.com/r4/
+ORACLE_FHIR_BASE=https://fhir-open.cerner.com/r4/{YOUR_ORACLE_APPLICATION_ID}
 
 ORACLE_PRIVATE_KEY_PATH=/home/admin/domains/telemedicall.com/etc/private.key
 ORACLE_PUBLIC_KEY_PATH=/home/admin/domains/telemedicall.com/etc/public.key
