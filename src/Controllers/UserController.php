@@ -40,7 +40,7 @@ class UserController extends BaseController
         ?string $appAudience,
         ?string $userId,
         ?string $clientId,
-        ?string $npClientId,
+        ?string $ApplicationId,
         ?string $token = null,
         ?string $sessionHash = null,
         ?string $sessionExp = null
@@ -51,7 +51,7 @@ class UserController extends BaseController
                 'AppAudience'   => $appAudience,
                 'UserID'        => $userId,
                 'ClientID'      => $clientId,
-                'NPClientID'    => $npClientId,
+                'ApplicationID'    => $ApplicationId,
                 'Token'         => $token,
                 'DateRegistered' => now(),
                 'SessionHash'   => $sessionHash,
