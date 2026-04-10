@@ -10,11 +10,11 @@ return [
     'jwt_exp_seconds'         => 300,
 
     // Very important → should be OUTSIDE version control!
-    'private_key_path'        => env('ORACLE_PRIVATE_KEY_PATH', '/home/admin/domains/gblvck.com/etc/private.key'),
-    'public_key_path'         => env('ORACLE_PUBLIC_KEY_PATH', '/home/admin/domains/gblvck.com/etc/public.key'),
+    'private_key_path'        => env('ORACLE_PRIVATE_KEY_PATH', '/home/admin/domains/telemedicall.com/etc/private.key'),
+    'public_key_path'         => env('ORACLE_PUBLIC_KEY_PATH', '/home/admin/domains/telemedicall.com/etc/public.key'),
 
     'session_cookie_lifetime' => 3600,
-    'cookie_domain'           => env('ORACLE_COOKIE_DOMAIN', '.gblvck.com'),
+    'cookie_domain'           => env('ORACLE_COOKIE_DOMAIN', '.telemedicall.com'),
 
     'oauth_scope'             => 'system/Patient.read system/Patient.search system/Patient.write',
     'smart_scope'             => 'openid fhirUser patient.read patient.search launch launch/patient',
@@ -32,9 +32,9 @@ return [
         //dedicated connection:
         'host'     => env('ORACLE_DB_HOST', 'localhost'),
         'port'     => env('ORACLE_DB_PORT', '3306'),
-        'database' => env('ORACLE_DB_DATABASE', 'admin_epic'),
-        'username' => env('ORACLE_DB_USERNAME', 'admin_epic'),
-        'password' => env('ORACLE_DB_PASSWORD', 'K3xuPkXWhwR3zp3GtKag'),
+        'database' => env('ORACLE_DB_DATABASE', ''),
+        'username' => env('ORACLE_DB_USERNAME', ''),
+        'password' => env('ORACLE_DB_PASSWORD', ''),
     ],
-    'allowed_root' => env('ORACLE_ALLOWED_ROOT', 'gblvck.com'),
+    'allowed_root' => env('ORACLE_ALLOWED_ROOT', 'telemedicall.com'),
 ];
