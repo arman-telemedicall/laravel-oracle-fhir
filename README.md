@@ -45,8 +45,8 @@ openssl rsa –in private.key –pubout –out public.key
 
 Set .env parameters
 ```bash
-ORACLE_TOKEN_URL=https://fhir.Oracle.com/interconnect-fhir-oauth/oauth2/token
-ORACLE_AUTH_URL=https://fhir.Oracle.com/interconnect-fhir-oauth/oauth2/authorize
+ORACLE_TOKEN_URL=https://authorization.cerner.com/tenants/e573b5d9-449b-411c-b6af-73f7fedafc83/protocols/oauth2/profiles/smart-v2/token
+ORACLE_AUTH_URL=https://authorization.cerner.com/tenants/e573b5d9-449b-411c-b6af-73f7fedafc83/protocols/oauth2/profiles/smart-v2/personas/provider/authorize
 ORACLE_FHIR_BASE=https://fhir-open.cerner.com/r4/{YOUR_ORACLE_APPLICATION_ID}
 
 ORACLE_PRIVATE_KEY_PATH=/home/admin/domains/telemedicall.com/etc/private.key
