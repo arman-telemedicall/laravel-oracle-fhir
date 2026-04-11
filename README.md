@@ -101,15 +101,17 @@ $overrides = [
 ];
 $service = app('OracleFhir');
 $service->initializeOracleConfig($overrides);
-return $service->PatientSummary('A1001.1','1dbdc6e4-555a-4257-9fee-650ed7691ce4','12724067');
+return $service->Patient('A1001.1','1dbdc6e4-555a-4257-9fee-650ed7691ce4','12724067');
 ```
 
 Direct Controller Usage
 ```bash
 use Telemedicall\OracleFhir\Controllers\UserController;
+$wellKnown = Http::get('https://fhir-ehr.cerner.com/r4/e573b5d9-449b-411c-b6af-73f7fedafc83/.well-known/smart-configuration')->json();
 $overrides = [
-        "auth_url" => "https://fhir.com",
-    ];
+    'auth_url'  => $wellKnown['authorization_endpoint'],
+    'token_url' => $wellKnown['token_endpoint'],
+];
 $service = new UserController($overrides);
 
 return $service->SmartOnFhir("4383e929-5eb1-4aca-817c-4cd2769a917f");
@@ -123,6 +125,8 @@ Route::prefix('oracle/fhir/R4')
                 Route::get('/jwks/{clientId}', [UserController::class, 'jwks'])->name('OracleFhir.jwks');
 
                 Route::get('/Callback', [UserController::class, 'Callback'])->name('OracleFhir.Callback');
+				
+				Route::get('/Patient/{PatientID}', [UserController::class, 'Patient'])->name('OracleFhir.Patient');
 });
 ```
 
