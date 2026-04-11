@@ -91,7 +91,7 @@ First add the user to the oracle_users table:
 ```bash
 $service = app('OracleFhir');
 $service->AddUser('Clinicians or Administrative Users','A1001.1','1dbdc6e4-555a-4257-9fee-650ed7691ce4','e573b5d9-449b-411c-b6af-73f7fedafc83',);
-```bash
+```
 Then use user credentials like Application ID and Client ID for other functions:
 ```bash
 $wellKnown = Http::get('https://fhir-ehr.cerner.com/r4/e573b5d9-449b-411c-b6af-73f7fedafc83/.well-known/smart-configuration')->json();
