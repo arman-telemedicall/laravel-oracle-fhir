@@ -6,7 +6,7 @@ Features:
 - Client credentials token management with JWT assertion
 - JWKS endpoint for public key distribution
 - FHIR List searching (system & user lists)
-- Patient $summary endpoint
+- Patient endpoint
 - Basic Patient resource creation
 - SMART on FHIR authorization code flow with PKCE
 - Session & token persistence in database
@@ -82,18 +82,26 @@ php artisan vendor:publish --tag=Oracle-fhir-migrations
 ```bash
 php artisan migrate
 ```
-This creates the Oracle_users table used for token & session persistence.
+This creates the oracle_users table used for token & session persistence.
 
 # Basic Usage
 Via Service Class / Facade
 
+First add the user to the oracle_users table:
 ```bash
+$service = app('OracleFhir');
+$service->AddUser('Clinicians or Administrative Users','A1001.1','1dbdc6e4-555a-4257-9fee-650ed7691ce4','e573b5d9-449b-411c-b6af-73f7fedafc83',);
+```bash
+Then use user credentials like Application ID and Client ID for other functions:
+```bash
+$wellKnown = Http::get('https://fhir-ehr.cerner.com/r4/e573b5d9-449b-411c-b6af-73f7fedafc83/.well-known/smart-configuration')->json();
 $overrides = [
-        "token_url" => "https://fhir.Oracle.com/interconnect-fhir-oauth/oauth2/authorize",
-    ];
+    'auth_url'  => $wellKnown['authorization_endpoint'],
+    'token_url' => $wellKnown['token_endpoint'],
+];
 $service = app('OracleFhir');
 $service->initializeOracleConfig($overrides);
-return $service->ListSearch("A1000.1","68965e9f-a9c8-480b-a169-518b0cf9f68f");
+return $service->PatientSummary('A1001.1','1dbdc6e4-555a-4257-9fee-650ed7691ce4','12724067');
 ```
 
 Direct Controller Usage
@@ -109,7 +117,7 @@ return $service->SmartOnFhir("4383e929-5eb1-4aca-817c-4cd2769a917f");
 
 Defined routes:
 ```bash
-Route::prefix('fhir/R4')
+Route::prefix('oracle/fhir/R4')
             ->middleware('web')           // applies session, CSRF, etc.
             ->group(function () {
                 Route::get('/jwks/{clientId}', [UserController::class, 'jwks'])->name('OracleFhir.jwks');
@@ -118,11 +126,11 @@ Route::prefix('fhir/R4')
 });
 ```
 
-Then link to /fhir/R4/jwks/your-client-id.
+Then link to /oracle/fhir/R4/jwks/your-client-id.
 
 ## Important Notes
 
-Tokens are stored in Oracle_users table and associated with a SessionHash cookie.
+Tokens are stored in oracle_users table and associated with a SessionHash cookie.
 Session expiration is set to 1 hour by default (configurable via jwt_exp_seconds + buffer).
 For production, always use HTTPS (secure cookie flag is enabled).
 Oracle sandbox: https://code-console.cerner.com/console/apps
