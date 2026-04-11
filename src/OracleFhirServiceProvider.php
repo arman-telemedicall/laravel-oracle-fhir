@@ -18,14 +18,14 @@ class OracleFhirServiceProvider extends ServiceProvider
             __DIR__.'/Database/Migrations' => database_path('migrations'),
         ], 'Oracle-fhir-migrations');
 
-		Route::get('/jwks/{clientId}', [UserController::class, 'jwks']);
-
-        Route::prefix('fhir/R4')
+        Route::prefix('oracle/fhir/R4')
             ->middleware('web')           // applies session, CSRF, etc.
             ->group(function () {
                 Route::get('/jwks/{clientId}', [UserController::class, 'jwks'])->name('OracleFhir.jwks');
 
                 Route::get('/Callback', [UserController::class, 'Callback'])->name('OracleFhir.Callback');
+
+				Route::get('/Patient/{PatientID}', [UserController::class, 'Patient'])->name('OracleFhir.Patient');
             });
     }
 

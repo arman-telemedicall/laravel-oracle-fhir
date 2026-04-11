@@ -51,9 +51,9 @@ class UserController extends BaseController
                 'AppAudience'   => $appAudience,
                 'UserID'        => $userId,
                 'ClientID'      => $clientId,
-                'ApplicationID'    => $ApplicationId,
+                'ApplicationID' => $ApplicationId,
                 'Token'         => $token,
-                'DateRegistered' => now(),
+                'DateRegistered'=> now(),
                 'SessionHash'   => $sessionHash,
                 'SessionEXP'    => $sessionExp ? now()->parse($sessionExp) : null,
             ]);
@@ -190,6 +190,13 @@ class UserController extends BaseController
         ], $response->status());
     }
 
+	public function Patient(string $PatientID)
+	{
+		$response = Http::withHeaders(['Accept' => 'application/fhir+json',])->get('https://fhir-open.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/Patient/'.$PatientID);
+
+        return $response;
+	}
+
     // ────────────────────────────────────────────────
     //  Helpers
     // ────────────────────────────────────────────────
@@ -271,7 +278,7 @@ class UserController extends BaseController
         }
 
         $scheme = request()->secure() ? 'https' : 'http';
-        $redirectUri = "{$scheme}://{$host}/fhir/R4/Callback";
+        $redirectUri = "{$scheme}://{$host}/oracle/fhir/R4/Callback";
 
         $state = bin2hex(random_bytes(16));
         Session::put('oauth2_state', $state);
@@ -322,7 +329,7 @@ class UserController extends BaseController
         }
 
         $scheme = request()->secure() ? 'https' : 'http';
-        $redirectUri = "{$scheme}://{$host}/fhir/R4/Callback";
+        $redirectUri = "{$scheme}://{$host}/oracle/fhir/R4/Callback";
 
         $response = Http::asForm()->post($this->OracleConfig('token_url'), [
             'grant_type'    => 'authorization_code',
@@ -379,6 +386,6 @@ class UserController extends BaseController
 
     private function generateCodeChallenge(string $verifier): string
     {
-        return rtrim(strtr(base64_encode(hash('sha256', $verifier, true)), '+/', '-_'), '=');
+        return rtrim(strtr(base64_encode(hash('sha384', $verifier, true)), '+/', '-_'), '=');
     }
 }

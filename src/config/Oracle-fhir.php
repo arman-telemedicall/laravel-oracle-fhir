@@ -1,12 +1,12 @@
 <?php
 
 return [
-    'token_url'      => env('ORACLE_TOKEN_URL', 'https://fhir.ORACLE.com/interconnect-fhir-oauth/oauth2/token'),
-    'auth_url'       => env('ORACLE_AUTH_URL', 'https://fhir.ORACLE.com/interconnect-fhir-oauth/oauth2/authorize'),
+    'token_url' => 'https://authorization.cerner.com/tenants/e573b5d9-449b-411c-b6af-73f7fedafc83/protocols/oauth2/profiles/smart-v2/token',
+    'auth_url'  => 'https://authorization.cerner.com/tenants/e573b5d9-449b-411c-b6af-73f7fedafc83/protocols/oauth2/profiles/smart-v2/personas/provider/authorize',
     'fhir_base'      => env('ORACLE_FHIR_BASE', 'https://fhir-open.cerner.com/r4/e573b5d9-449b-411c-b6af-73f7fedafc83'),
 
-    'jwt_alg'                 => 'RS256',
-    'jwt_kid'                 => 'ORACLE-key',
+    'jwt_alg'                 => 'RS384',
+    'jwt_kid'                 => 'Oracle-key',
     'jwt_exp_seconds'         => 300,
 
     // Very important → should be OUTSIDE version control!
@@ -18,7 +18,7 @@ return [
 
     'oauth_scope'             => 'system/Patient.read system/Patient.search system/Patient.write',
     'smart_scope'             => 'openid fhirUser patient.read patient.search launch launch/patient',
-    'code_challenge_method'   => 'S256',
+    'code_challenge_method'   => 'S384',
 
     'list_code'               => 'patients',
     'list_subject'            => env('ORACLE_LIST_SUBJECT', ''), // e.g. Practitioner/123

@@ -71,7 +71,7 @@ abstract class BaseController
             ->table('oracle_users')
             ->where('UserID', $userId)
             ->where(function ($q) use ($clientId) {
-                $q->where('NPClientID', $clientId)
+                $q->where('ApplicationID', $clientId)
                   ->orWhere('ClientID', $clientId);
             })
             ->first();
@@ -112,7 +112,7 @@ abstract class BaseController
             $unsignedJwt,
             $signature,
             $privateKey,
-            OPENSSL_ALGO_SHA256
+            OPENSSL_ALGO_SHA384
         );
 
         if (!$success) {
