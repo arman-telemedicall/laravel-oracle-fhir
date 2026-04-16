@@ -1,5 +1,5 @@
 {
-    "name": "arman-telemedicall/laravel-epic-fhir",
+    "name": "arman-telemedicall/laravel-oracle-fhir",
     "description": "Epic FHIR client integration for Laravel with SMART on FHIR support",
     "type": "library",
     "license": "MIT",
