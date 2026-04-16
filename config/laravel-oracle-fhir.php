@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'token_url' => env('ORACLE_FHIR_TOKEN_URL', 'https://fhir-ehr.cerner.com/r4/),
+    'token_url' => env('ORACLE_FHIR_TOKEN_URL', 'https://fhir-ehr.cerner.com/r4/'),
     'auth_url' => env('ORACLE_FHIR_AUTH_URL', 'https://fhir-ehr.cerner.com/r4/'),
     'fhir_base' => env('ORACLE_FHIR_FHIR_BASE', 'https://fhir-ehr.cerner.com/r4/'),
 	'sandbox_enabled' => (bool) env('ORACLE_FHIR_SANDBOX_ENABLED', true),
