@@ -1,16 +1,16 @@
 {
     "name": "arman-telemedicall/laravel-oracle-fhir",
-    "description": "Epic FHIR client integration for Laravel with SMART on FHIR support",
+    "description": "Oracle FHIR client integration for Laravel with SMART on FHIR support",
     "type": "library",
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Teleminergmbh\\EpicFhir\\": "src/"
+            "Teleminergmbh\\OracleFhir\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Teleminergmbh\\EpicFhir\\Tests\\": "tests/"
+            "Teleminergmbh\\OracleFhir\\Tests\\": "tests/"
         }
     },
     "require": {
@@ -36,10 +36,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Teleminergmbh\\EpicFhir\\EpicFhirServiceProvider"
+                "Teleminergmbh\\OracleFhir\\OracleFhirServiceProvider"
             ],
             "aliases": {
-                "EpicFhir": "Teleminergmbh\\EpicFhir\\Facades\\EpicFhir"
+                "OracleFhir": "Teleminergmbh\\OracleFhir\\Facades\\OracleFhir"
             }
         }
     },
