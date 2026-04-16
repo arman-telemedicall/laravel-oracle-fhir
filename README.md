@@ -1,6 +1,6 @@
 # Laravel FHIR Client
 
-A Laravel package for integrating with Epic's FHIR API, supporting both **system-level OAuth client credentials flow** (JWT assertion) and **SMART on FHIR patient launch** (authorization code + PKCE).
+A Laravel package for integrating with Oracle's FHIR API, supporting both **system-level OAuth client credentials flow** (JWT assertion) and **SMART on FHIR patient launch** (authorization code + PKCE).
 
 Features:
 - Client credentials token management with JWT assertion
@@ -16,11 +16,11 @@ Features:
 - PHP >= 8.2
 - Laravel 11 or 12
 - OpenSSL extension (for JWT signing)
-- Valid Epic FHIR application credentials & RSA key pair
+- Valid Oracle FHIR application credentials & RSA key pair
 
 ## Installation
 ```bash
-composer require teleminergmbh/laravel-epic-fhir
+composer require teleminergmbh/laravel-oracle-fhir
 ```
 
 If you are developing locally without publishing the package, see `DEVELOPMENT.md` for a Composer `path` repository setup.
@@ -33,20 +33,20 @@ openssl rsa -in private.key -pubout -out public.key
 
 Set `.env` parameters
 ```bash
-EPIC_FHIR_TOKEN_URL=https://fhir.epic.com/interconnect-fhir-oauth/oauth2/token
-EPIC_FHIR_AUTH_URL=https://fhir.epic.com/interconnect-fhir-oauth/oauth2/authorize
-EPIC_FHIR_FHIR_BASE=https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4
+ORACLE_FHIR_TOKEN_URL=https://fhir.oracle.com/interconnect-fhir-oauth/oauth2/token
+ORACLE_FHIR_AUTH_URL=https://fhir.oracle.com/interconnect-fhir-oauth/oauth2/authorize
+ORACLE_FHIR_FHIR_BASE=https://fhir.oracle.com/interconnect-fhir-oauth/api/FHIR/R4
 
-EPIC_FHIR_PRIVATE_KEY_PATH=/home/admin/domains/telemedicall.com/etc/private.key
-EPIC_FHIR_PUBLIC_KEY_PATH=/home/admin/domains/telemedicall.com/etc/public.key
+ORACLE_FHIR_PRIVATE_KEY_PATH=/home/admin/domains/telemedicall.com/etc/private.key
+ORACLE_FHIR_PUBLIC_KEY_PATH=/home/admin/domains/telemedicall.com/etc/public.key
 
-EPIC_FHIR_COOKIE_DOMAIN=.telemedicall.com
-EPIC_FHIR_ALLOWED_ROOT=telemedicall.com
+ORACLE_FHIR_COOKIE_DOMAIN=.telemedicall.com
+ORACLE_FHIR_ALLOWED_ROOT=telemedicall.com
 
-EPIC_FHIR_TOKEN_STORE_DRIVER=cache
+ORACLE_FHIR_TOKEN_STORE_DRIVER=cache
 
-EPIC_FHIR_DB_CONNECTION=mysql
-EPIC_FHIR_DB_TABLE=epic_fhir_tokens
+ORACLE_FHIR_DB_CONNECTION=mysql
+ORACLE_FHIR_DB_TABLE=oracle_fhir_tokens
 
 
 ```
@@ -56,34 +56,34 @@ Publish the configuration file and migration:
 
 ```bash
 # Publish config
-php artisan vendor:publish --tag=laravel-epic-fhir-config
+php artisan vendor:publish --tag=laravel-oracle-fhir-config
 
-# Publish migration (epic_fhir_tokens table)
-php artisan vendor:publish --tag=epic-fhir-migrations
+# Publish migration (oracle_fhir_tokens table)
+php artisan vendor:publish --tag=oracle-fhir-migrations
 ```
 
 # Run the migration:
 ```bash
 php artisan migrate
 ```
-This creates the `epic_fhir_tokens` table used for token persistence when using the `database` TokenStore driver.
+This creates the `oracle_fhir_tokens` table used for token persistence when using the `database` TokenStore driver.
 
 # Basic Usage
 Via Service Class / Facade
 
 ```php
-$epic = app('EpicFhir');
+$oracle = app('OracleFhir');
 
 $clientId = 'your-client-id';
 
-return $epic->fhir()->patientSummarySystem($clientId, 'patient-id');
+return $oracle->fhir()->patientSummarySystem($clientId, 'patient-id');
 ```
 
 Dynamic connection (per-user overrides)
 ```php
 $userId = (string) $user->id; // from your app DB
 
-$epic = app('EpicFhir')->connection([
+$oracle = app('OracleFhir')->connection([
     'connection_key' => $userId, // used to isolate token storage
     'token_url' => $user->token_url,
     'fhir_base' => $user->fhir_base,
@@ -92,19 +92,19 @@ $epic = app('EpicFhir')->connection([
     'public_key_path' => $user->public_key_path,
 ]);
 
-return $epic->fhir()->patientSummarySystem($user->client_id, 'patient-id');
+return $oracle->fhir()->patientSummarySystem($user->client_id, 'patient-id');
 ```
 
 You can also access tokens directly:
 
 ```php
-$accessToken = $epic->systemAccessToken($clientId);
-$smartAccessToken = $epic->smartAccessToken($clientId, 'owner1');
+$accessToken = $oracle->systemAccessToken($clientId);
+$smartAccessToken = $oracle->smartAccessToken($clientId, 'owner1');
 ```
 
 Direct Controller Usage
 ```php
-use Teleminergmbh\EpicFhir\Controllers\UserController;
+use Teleminergmbh\OracleFhir\Controllers\UserController;
 $overrides = [
         "auth_url" => "https://fhir.com",
     ];
@@ -116,10 +116,10 @@ return $controller->smartLaunch("4383e929-5eb1-4aca-817c-4cd2769a917f");
 Request config resolver (SMART/JWKS)
 ```php
 use Illuminate\Http\Request;
-use Teleminergmbh\EpicFhir\Contracts\EpicFhirRequestConfigResolverInterface;
+use Teleminergmbh\OracleFhir\Contracts\OracleFhirRequestConfigResolverInterface;
 
-app()->bind(EpicFhirRequestConfigResolverInterface::class, function () {
-    return new class implements EpicFhirRequestConfigResolverInterface
+app()->bind(OracleFhirRequestConfigResolverInterface::class, function () {
+    return new class implements OracleFhirRequestConfigResolverInterface
     {
         public function resolveForRequest(Request $request, ?string $clientId = null): array
         {
@@ -144,12 +144,12 @@ app()->bind(EpicFhirRequestConfigResolverInterface::class, function () {
 
 Defined routes:
 ```php
-Route::prefix(config('laravel-epic-fhir.routes.prefix', 'fhir/R4'))
-    ->middleware(config('laravel-epic-fhir.routes.middleware', 'web'))
+Route::prefix(config('laravel-oracle-fhir.routes.prefix', 'fhir/R4'))
+    ->middleware(config('laravel-oracle-fhir.routes.middleware', 'web'))
     ->group(function () {
-        Route::get('/jwks/{clientId}', [UserController::class, 'jwks'])->name('EpicFhir.jwks');
-        Route::get('/smart/launch/{clientId}', [UserController::class, 'smartLaunch'])->name('EpicFhir.smart.launch');
-        Route::get('/smart/callback', [UserController::class, 'smartCallback'])->name('EpicFhir.smart.callback');
+        Route::get('/jwks/{clientId}', [UserController::class, 'jwks'])->name('OracleFhir.jwks');
+        Route::get('/smart/launch/{clientId}', [UserController::class, 'smartLaunch'])->name('OracleFhir.smart.launch');
+        Route::get('/smart/callback', [UserController::class, 'smartCallback'])->name('OracleFhir.smart.callback');
     });
 ```
 
@@ -158,9 +158,9 @@ Then link to `/{prefix}/jwks/{clientId}` (by default: `/fhir/R4/jwks/your-client
 ## Important Notes
 
 Tokens are stored via the configured TokenStore driver (`cache` or `database`).
-If you use the `database` driver, publish and run the migration to create the `epic_fhir_tokens` table.
-If you use the `database` driver, database host/port/credentials are taken from your application’s normal Laravel database configuration; the package only needs `EPIC_FHIR_DB_CONNECTION` (and optionally `EPIC_FHIR_DB_TABLE`).
+If you use the `database` driver, publish and run the migration to create the `oracle_fhir_tokens` table.
+If you use the `database` driver, database host/port/credentials are taken from your application’s normal Laravel database configuration; the package only needs `ORACLE_FHIR_DB_CONNECTION` (and optionally `ORACLE_FHIR_DB_TABLE`).
 Backwards compatibility: if you do not use `connection([...])` or a request resolver, the package continues to use the published Laravel config values as before.
 For production, always use HTTPS.
-Epic sandbox: https://fhir.epic.com/interconnect-fhir-oauth
-Full Epic FHIR documentation: https://open.epic.com/Interface/FHIR
+Oracle sandbox: https://fhir.oracle.com/interconnect-fhir-oauth
+Full Oracle FHIR documentation: https://open.oracle.com/Interface/FHIR
