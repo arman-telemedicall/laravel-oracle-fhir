@@ -37,7 +37,7 @@ abstract class BaseController
             throw new RuntimeException('Failed to extract RSA key details');
         }
 
-        $kid = (string) $this->epicConfig('jwt_kid', '');
+        $kid = (string) $this->oracleConfig('jwt_kid', '');
         if ($kid === '') {
             $kid = $this->kidFromPublicKey($publicKeyPem);
         }
@@ -45,7 +45,10 @@ abstract class BaseController
         return [
             'kty' => 'RSA',
             'use' => 'sig',
-            'alg' => $this->epicConfig('jwt_alg'),
+            'alg' => $this->oracleConfig('jwt_alg'),
+			"iss" => $clientId,
+            "sub" => $clientId,
+            "typ" => "JWT",
             'kid' => $kid,
             'n' => $this->base64UrlEncode($details['rsa']['n']),
             'e' => $this->base64UrlEncode($details['rsa']['e']),

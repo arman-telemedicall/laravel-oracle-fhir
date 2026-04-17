@@ -22,12 +22,12 @@ class OracleFhirServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->publishes([
-            __DIR__.'/../config/laravel-oracle-fhir.php' => config_path('laravel-oracle-fhir.php'),
+            __DIR__ . '/../config/laravel-oracle-fhir.php' => config_path('laravel-oracle-fhir.php'),
         ], 'laravel-oracle-fhir-config');
 
         if (config('laravel-oracle-fhir.migrations.enabled', false)) {
             $this->publishes([
-                __DIR__.'/Database/Migrations/2026_04_16_000000_create_oracle_fhir_tokens_table.php' => database_path('migrations/2026_04_16_000000_create_oracle_fhir_tokens_table.php'),
+                __DIR__ . '/Database/Migrations/2026_04_16_000000_create_oracle_fhir_tokens_table.php' => database_path('migrations/2026_04_16_000000_create_oracle_fhir_tokens_table.php'),
             ], 'oracle-fhir-migrations');
         }
 
@@ -38,7 +38,7 @@ class OracleFhirServiceProvider extends ServiceProvider
             Route::prefix($prefix)
                 ->middleware($middleware)
                 ->group(function () {
-                    Route::get('/jwks/{clientId?}', [UserController::class, 'jwks'])->name('OracleFhir.jwks');
+                    Route::get('/jwks/{clientId}', [UserController::class, 'jwks'])->name('OracleFhir.jwks');
                     Route::get('/smart/launch/{clientId}', [UserController::class, 'smartLaunch'])->name('OracleFhir.smart.launch');
                     Route::get('/smart/callback', [UserController::class, 'smartCallback'])->name('OracleFhir.smart.callback');
                 });
