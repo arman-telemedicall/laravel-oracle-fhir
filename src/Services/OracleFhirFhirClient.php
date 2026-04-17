@@ -67,4 +67,11 @@ class OracleFhirFhirClient implements OracleFhirFhirClientInterface
 		
 		return $this->getFhir($clientId, $tenantId, '/Patient/' . $patientId, $token, []);
 	}
+
+	public function getObservationsList(string $clientId, string $tenantId, string $patientId): string
+	{
+		if($this->oracleConfig('sandbox_enabled')){$token = 'SandBox';} else {$token = $this->auth->getSystemAccessToken($clientId, $tenantId);}
+		
+		return $this->getFhir($clientId, $tenantId, '/Observation', $token, ['patient' => $patientId]);
+	}
 }
