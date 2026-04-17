@@ -5,8 +5,7 @@ A Laravel package for integrating with Oracle's FHIR API, supporting both **syst
 Features:
 - Client credentials token management with JWT assertion
 - JWKS endpoint for public key distribution
-- FHIR List searching (system & user lists)
-- Patient $summary endpoint
+- Patient endpoint
 - Basic Patient resource creation
 - SMART on FHIR authorization code flow with PKCE
 - Session & token persistence in database
@@ -33,9 +32,9 @@ openssl rsa -in private.key -pubout -out public.key
 
 Set `.env` parameters
 ```bash
-ORACLE_FHIR_TOKEN_URL=https://fhir.oracle.com/interconnect-fhir-oauth/oauth2/token
-ORACLE_FHIR_AUTH_URL=https://fhir.oracle.com/interconnect-fhir-oauth/oauth2/authorize
-ORACLE_FHIR_FHIR_BASE=https://fhir.oracle.com/interconnect-fhir-oauth/api/FHIR/R4
+ORACLE_FHIR_TOKEN_URL=https://fhir-ehr.cerner.com/r4/
+ORACLE_FHIR_AUTH_URL=https://fhir-ehr.cerner.com/r4/
+ORACLE_FHIR_FHIR_BASE=https://fhir-ehr.cerner.com/r4/
 
 ORACLE_FHIR_PRIVATE_KEY_PATH=/home/admin/domains/telemedicall.com/etc/private.key
 ORACLE_FHIR_PUBLIC_KEY_PATH=/home/admin/domains/telemedicall.com/etc/public.key
@@ -72,11 +71,8 @@ This creates the `oracle_fhir_tokens` table used for token persistence when usin
 Via Service Class / Facade
 
 ```php
-$oracle = app('OracleFhir');
-
-$clientId = 'your-client-id';
-
-return $oracle->fhir()->patientSummarySystem($clientId, 'patient-id');
+$service = app('OracleFhir');
+return $service->fhir()->getPatientById($clientId, $tenantId, $patientId);
 ```
 
 Dynamic connection (per-user overrides)
@@ -92,7 +88,7 @@ $oracle = app('OracleFhir')->connection([
     'public_key_path' => $user->public_key_path,
 ]);
 
-return $oracle->fhir()->patientSummarySystem($user->client_id, 'patient-id');
+return $oracle->fhir()->getPatientById($clientId, $tenantId, $patientId);
 ```
 
 You can also access tokens directly:
@@ -153,7 +149,7 @@ Route::prefix(config('laravel-oracle-fhir.routes.prefix', 'fhir/R4'))
     });
 ```
 
-Then link to `/{prefix}/jwks/{clientId}` (by default: `/fhir/R4/jwks/your-client-id`).
+Then link to `/{prefix}/jwks/{clientId}` (by default: `oracle/fhir/R4/jwks/your-client-id`).
 
 ## Important Notes
 
@@ -162,5 +158,5 @@ If you use the `database` driver, publish and run the migration to create the `o
 If you use the `database` driver, database host/port/credentials are taken from your application’s normal Laravel database configuration; the package only needs `ORACLE_FHIR_DB_CONNECTION` (and optionally `ORACLE_FHIR_DB_TABLE`).
 Backwards compatibility: if you do not use `connection([...])` or a request resolver, the package continues to use the published Laravel config values as before.
 For production, always use HTTPS.
-Oracle sandbox: https://fhir.oracle.com/interconnect-fhir-oauth
-Full Oracle FHIR documentation: https://open.oracle.com/Interface/FHIR
+Oracle sandbox: https://fhir-open.cerner.com/r4/
+Full Oracle FHIR documentation:https://docs.oracle.com/en/industries/health/millennium-platform-apis/mfrap/op-patientid-get.html
