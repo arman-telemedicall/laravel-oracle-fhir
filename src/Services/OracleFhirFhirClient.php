@@ -24,6 +24,7 @@ class OracleFhirFhirClient implements OracleFhirFhirClientInterface
     protected function getFhir(string $clientId, string $tenantId, string $path, string $accessToken, array $query = []): string
     {
         $url = rtrim((string) $this->oracleConfig('fhir_base'), '/').$path;
+		if($this->oracleConfig('sandbox_enabled')){$url = 'https://fhir-open.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d' . $path;}
 
         try {
             return $this->http->getRaw($url, array_filter($query, fn ($v) => $v !== null && $v !== ''), [
@@ -40,8 +41,8 @@ class OracleFhirFhirClient implements OracleFhirFhirClientInterface
     protected function postFhir(string $clientId, string $tenantId, string $path, string $accessToken, array $payload): array
     {
         $url = rtrim((string) $this->oracleConfig('fhir_base'), '/') . $tenantId .$path;
-		if($this->oracleConfig('sandbox_enabled')){$url = 'https://fhir-open.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/' . $path;}
-
+		if($this->oracleConfig('sandbox_enabled')){$url = 'https://fhir-open.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d' . $path;}
+		
         try {
             $body = $this->http->postJson($url, $payload, [
                 'Authorization' => "Bearer {$accessToken}",
