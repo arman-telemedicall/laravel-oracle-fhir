@@ -51,6 +51,14 @@ class OracleFhirHttpClient implements OracleFhirHttpClientInterface
         return (array) $response->json();
     }
 
+	public function postHeader(string $url, array $payload, array $headers = []): array
+    {
+        $response = $this->request($headers)->post($url, $payload);
+        $response->throw();
+
+        return (array) $response->header();
+    }
+
     /**
      * @param  array<string, scalar|null>  $payload
      * @param  array<string, string>  $headers
